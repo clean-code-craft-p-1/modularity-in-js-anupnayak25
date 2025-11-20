@@ -1,6 +1,4 @@
 import fs from "fs";
-import feverDectection from "./features/feverDetection.mjs";
-import circadianAnalysis from "./circadianAnalysis.mjs";
 import { readFile, writeFile, exists, deleteFile } from "./modules/fileIO.mjs";
 import { parseFileContent } from "./modules/dataParser.mjs";
 import { computeStatistics } from "./modules/statistics.mjs";
