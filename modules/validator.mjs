@@ -15,7 +15,7 @@ export function validateTemperature(value) {
 // { blank:true } for blank lines
 // { error:true } for invalid lines
 // { timestamp, temp } for valid readings
-export function parseLine(line, index) {
+export function parseLine(line) {
   const trimmed = line.trim();
   if (!trimmed) return { blank: true };
 
