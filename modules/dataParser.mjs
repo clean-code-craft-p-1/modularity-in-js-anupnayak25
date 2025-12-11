@@ -1,4 +1,4 @@
-// File content parsing (line iteration) extracted from original main.mjs
+// File content parsing 
 import { parseLine } from "./validator.mjs";
 
 export function parseFileContent(fileContent) {

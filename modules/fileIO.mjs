@@ -1,4 +1,4 @@
-// Thin fs wrappers (extracted use from original main.mjs)
+// Thin fs wrappers 
 import fs from "fs";
 
 export function readFile(path) {
