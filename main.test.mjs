@@ -1,5 +1,8 @@
 import { writeFile, exists, deleteFile, readFile } from "./modules/fileIO.mjs";
+import { parseFileContent } from "./modules/dataParser.mjs";
 import { processBatch } from "./main.mjs";
+import { detectSustainedFever } from "./features/feverDetection.mjs";
+import { summarizeCircadian } from "./features/circadianAnalysis.mjs";
 
 // Main execution (test harness)
 const testFilename = "test_temps.csv";
@@ -21,6 +24,39 @@ console.log(`Created test file: ${testFilename}`);
 
 // Process the test file
 processBatch(testFilename);
+
+// Parse data for feature evaluations
+const fileContent = readFile(testFilename);
+const parseData = parseFileContent(fileContent);
+
+// Feature 1: Fever Detection & Alerting
+const feverResult = detectSustainedFever(parseData, { threshold: 38.0, minDurationMinutes: 30 });
+console.log("\nFever Detection:");
+if (feverResult.hasAlert) {
+  for (const a of feverResult.alerts) {
+    console.log(
+      `  Sustained fever from ${a.startTime} to ${a.endTime} (${Math.round(
+        a.durationSeconds / 60
+      )} min), max ${a.maxTemp.toFixed(2)}°C`
+    );
+  }
+} else {
+  console.log("  No sustained fever intervals detected.");
+}
+
+// Feature 2: Circadian Pattern Summary
+const circadian = summarizeCircadian(parseData);
+console.log("\nCircadian Summary:");
+console.log(
+  `  Day avg: ${circadian.dayAvg.toFixed(2)}°C, Night avg: ${circadian.nightAvg.toFixed(
+    2
+  )}°C, Δ: ${circadian.nightHigherBy.toFixed(2)}°C`
+);
+if (circadian.notes.length) {
+  for (const n of circadian.notes) console.log(`  Note: ${n}`);
+} else {
+  console.log("  No notable circadian anomalies.");
+}
 
 // Verify the summary file was created
 const summaryFile = testFilename + "_summary.txt";

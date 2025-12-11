@@ -21,7 +21,7 @@ export function summarizeCircadian(parseData) {
 
   const hourlyAverages = buckets.map((b) => avg(b));
 
-  // Define day 08:00-20:00, night 20:00-08:00
+  // day 08:00-20:00, night 20:00-08:00
   const dayHours = new Set([8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]);
   const nightHours = new Set([0, 1, 2, 3, 4, 5, 6, 7, 20, 21, 22, 23]);
 
