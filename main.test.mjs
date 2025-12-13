@@ -3,11 +3,11 @@ import { parseFileContent } from "./modules/dataParser.mjs";
 import { processBatch } from "./main.mjs";
 import { detectSustainedFever } from "./features/feverDetection.mjs";
 import { summarizeCircadian } from "./features/circadianAnalysis.mjs";
+import { describe, it } from "node:test";
 
 // Main execution (test harness)
 const testFilename = "test_temps.csv";
-const testData = [
-  "09:15:30,23.5",
+const testData = ["09:15:30,23.5",
   "09:16:00,24.1",
   "09:16:30,22.8",
   "09:17:00,25.3",
@@ -24,7 +24,6 @@ console.log(`Test file created: ${testFilename}`);
 
 // Process the test file
 processBatch(testFilename);
-
 const parseData = parseFileContent(readFile(testFilename));
 
 // Feature 1: Fever Detection & Alerting
@@ -33,13 +32,18 @@ console.log("\nFever:", feverResult.hasAlert ? `${feverResult.alerts.length} int
 
 // Feature 2: Circadian Pattern Summary
 const circadian = summarizeCircadian(parseData);
-console.log(
-  `\nCircadian: day ${circadian.dayAvg.toFixed(2)}°C, night ${circadian.nightAvg.toFixed(
-    2
-  )}°C, Δ ${circadian.nightHigherBy.toFixed(2)}°C`
-);
+console.log(`\nCircadian: day ${circadian.dayAvg.toFixed(2)}°C, night ${circadian.nightAvg.toFixed(2)}°C, Δ ${circadian.nightHigherBy.toFixed(2)}°C`);
 if (circadian.notes.length) circadian.notes.forEach((n) => console.log(`Note: ${n}`));
 
 // Clean up
 deleteFile(testFilename);
 deleteFile(testFilename + "_summary.txt");
+
+describe("Circadian Analysis", () => {
+  it("should handle invalid hours", () => {
+    const data =["25:00:00,37.0", "12:00:00,38.5", "03:00:00,36.8", "09:19:00,26.1","33:19:30,23.2","aa:bb:cc,24.2","abcd,25.8"];
+    const parseData = parseFileContent(data.join("\n") + "\n");
+    const result = summarizeCircadian(parseData);
+    console.log("\nCircadian with invalid hours:", result);
+  });
+});

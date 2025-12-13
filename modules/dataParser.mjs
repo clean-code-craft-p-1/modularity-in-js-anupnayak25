@@ -10,7 +10,7 @@ export function parseFileContent(fileContent) {
   let num_blank_lines = 0;
 
   for (let i = 0; i < lines.length; i++) {
-    const result = parseLine(lines[i], i);
+    const result = parseLine(lines[i]);
     if (result.blank) {
       num_blank_lines++;
       continue;
