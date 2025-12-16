@@ -3,7 +3,10 @@ import { parseFileContent } from "./modules/dataParser.mjs";
 import { processBatch } from "./main.mjs";
 import { detectSustainedFever } from "./features/feverDetection.mjs";
 import { summarizeCircadian } from "./features/circadianAnalysis.mjs";
-import { describe, it } from "node:test";
+import "./tests/noFever.test.mjs";
+import "./tests/feverRuns.test.mjs";
+import "./tests/circadianBasics.test.mjs";
+import "./tests/patterns.test.mjs";
 
 // Main execution (test harness)
 const testFilename = "test_temps.csv";
@@ -39,11 +42,4 @@ if (circadian.notes.length) circadian.notes.forEach((n) => console.log(`Note: ${
 deleteFile(testFilename);
 deleteFile(testFilename + "_summary.txt");
 
-describe("Circadian Analysis", () => {
-  it("should handle invalid hours", () => {
-    const data =["25:00:00,37.0", "12:00:00,38.5", "03:00:00,36.8", "09:19:00,26.1","33:19:30,23.2","aa:bb:cc,24.2","abcd,25.8"];
-    const parseData = parseFileContent(data.join("\n") + "\n");
-    const result = summarizeCircadian(parseData);
-    console.log("\nCircadian with invalid hours:", result);
-  });
-});
+
